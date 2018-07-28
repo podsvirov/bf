@@ -1,0 +1,7 @@
+[submodule "pdcurses"]
+	path = pdcurses
+	url = https://github.com/wmcbrine/PDCurses.git
+[submodule "html"]
+	path = html
+	url = https://github.com/podsvirov/bf.git
+	branch = gh-pages
