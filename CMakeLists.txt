@@ -4,6 +4,8 @@ project(bf
     VERSION 0.1.0
     LANGUAGES C)
 
+set(PDC_FONT_PATH "" CACHE FILEPATH "Path to *.ttf font file")
+
 add_library(bf bf.h bf.c)
 
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
@@ -17,12 +19,6 @@ target_include_directories(bf
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/pdcurses>
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>)
-
-if(EMSCRIPTEN)
-    set_target_properties(bf PROPERTIES
-        COMPILE_FLAGS "-s USE_SDL=2"
-        LINK_FLAGS "-s USE_SDL=2 -lsdl")
-endif()
 
 foreach(FILENAME
     addch addchstr addstr attr beep
@@ -50,6 +46,31 @@ set_target_properties(bf PROPERTIES
     PUBLIC_HEADER bf.h
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
     EXPORT_NAME "c")
+
+if(EMSCRIPTEN)
+    set_target_properties(bf PROPERTIES
+        COMPILE_FLAGS "-s USE_SDL=2"
+        LINK_FLAGS "-s USE_SDL=2")
+    if(EXISTS "${PDC_FONT_PATH}")
+        set_property(TARGET bf APPEND_STRING PROPERTY COMPILE_FLAGS " -s USE_SDL_TTF=2")
+        set_property(TARGET bf APPEND_STRING PROPERTY LINK_FLAGS " -s USE_SDL_TTF=2")
+    endif()
+endif()
+
+target_compile_definitions(bf PRIVATE PDC_FORCE_UTF8=1)
+
+if(EXISTS "${PDC_FONT_PATH}" OR WIN32)
+    target_compile_definitions(bf PRIVATE PDC_WIDE=1)
+endif()
+
+if(EXISTS "${PDC_FONT_PATH}")
+    set(PDC_FONT_NAME "font.ttf")
+    #get_filename_component(PDC_FONT_NAME "${PDC_FONT_PATH}" NAME)
+    configure_file("${PDC_FONT_PATH}" "${PDC_FONT_NAME}" COPYONLY)
+    target_compile_definitions(bf
+        PRIVATE
+            PDC_FONT_PATH="${PDC_FONT_NAME}")
+endif()
 
 install(TARGETS bf EXPORT c
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -82,4 +103,9 @@ if(EMSCRIPTEN)
         COMPILE_FLAGS "-s USE_SDL=2"
         LINK_FLAGS "-s USE_SDL=2 --emrun"
         SUFFIX ".html")
+    if(EXISTS "${PDC_FONT_PATH}")
+        set_property(TARGET main APPEND_STRING PROPERTY COMPILE_FLAGS " -s USE_SDL_TTF=2")
+        set_property(TARGET main APPEND_STRING PROPERTY
+            LINK_FLAGS " -s USE_SDL_TTF=2 --preload-file ${PDC_FONT_NAME}")
+    endif()
 endif()

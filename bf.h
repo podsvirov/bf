@@ -40,6 +40,9 @@ extern int bfre(int nbuf);
 /// Non-bloking input
 extern int bfas(int as);
 
+/// Encode/Decode UTF-8 characters
+extern int bfu8(int u8);
+
 /// Bye - terminate bf library
 extern int bfbi();
 

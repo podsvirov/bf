@@ -1,6 +1,7 @@
 #include "bf.h"
 
 #include <curses.h>
+#include <locale.h>
 #include <string.h>
 #include <time.h>
 
@@ -16,9 +17,19 @@ static bool _bfas = FALSE;
 static int _bfch = ERR;
 static struct _bfbuf _bfbufs[1024];
 
+#ifdef PDCURSES
+static bool _bfu8 = TRUE;
+#else
+static bool _bfu8 = FALSE;
+#endif
+
 int bfhi() {
   if (_bfw)
     return 0;
+
+#ifdef NCURSES_VERSION
+  setlocale(LC_ALL, "");
+#endif
 
   _bfw = initscr();
   cbreak();
@@ -67,18 +78,48 @@ int bfoa(int nbuf, const char *fmt, ...) {
   return buf->size;
 }
 
+void bfau8c(struct _bfbuf *buf, int code) {
+    int chw = 1;
+    if (code < 0x80) {
+        chw = 1;
+        buf->str[buf->size] = code;
+    } else if (code < 0x800) {
+        chw = 2;
+        buf->str[buf->size] = ((code & 0x07c0) >> 6) | 0xc0;
+        buf->str[buf->size + 1] = (code & 0x003f) | 0x80;
+    } else {
+        chw = 3;
+        buf->str[buf->size] = ((code & 0xf000) >> 12) | 0xe0;
+        buf->str[buf->size + 1] = ((code & 0x0fc0) >> 6) | 0x80;
+        buf->str[buf->size + 2] = (code & 0x003f) | 0x80;
+    }
+    buf->size += chw;
+    buf->str[buf->size] = 0;
+}
+
 int bfiv(struct _bfbuf *buf, const char *fmt, va_list args) {
   if (_bfch != ERR && _bfch != 10) {
     if (_bfch == 8 || _bfch == 127) // {Backspace}
     {
       if (buf->size > 0) {
-        buf->size--;
-        buf->str[buf->size] = 0;
+          int chw = 1;
+          if (_bfu8) {
+            while (chw <= buf->size
+                   && ((buf->str[buf->size - chw] & 0xc0) == 0x80)) {
+                chw++;
+            }
+          }
+          buf->size -= chw;
+          buf->str[buf->size] = 0;
       }
     } else {
-      buf->str[buf->size] = _bfch;
-      buf->size++;
-      buf->str[buf->size] = 0;
+        if (_bfu8) {
+          bfau8c(buf, _bfch);
+        } else {
+          buf->str[buf->size] = _bfch;
+          buf->size += 1;
+          buf->str[buf->size] = 0;
+        }
     }
   } else if (_bfch != ERR) {
     buf->argc = 0;
@@ -153,6 +194,17 @@ int bfas(int as) {
       nodelay(_bfw, FALSE);
       _bfas = FALSE;
     }
+  }
+  return r;
+}
+
+int bfu8(int u8)
+{
+  int r = _bfu8;
+  if (u8) {
+    _bfu8 = TRUE;
+  } else {
+    _bfu8 = FALSE;
   }
   return r;
 }
