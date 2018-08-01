@@ -99,13 +99,19 @@ target_link_libraries(main
     PRIVATE bf)
 
 if(EMSCRIPTEN)
-    set_target_properties(main PROPERTIES
-        COMPILE_FLAGS "-s USE_SDL=2"
-        LINK_FLAGS "-s USE_SDL=2 --emrun"
-        SUFFIX ".html")
-    if(EXISTS "${PDC_FONT_PATH}")
-        set_property(TARGET main APPEND_STRING PROPERTY COMPILE_FLAGS " -s USE_SDL_TTF=2")
-        set_property(TARGET main APPEND_STRING PROPERTY
-            LINK_FLAGS " -s USE_SDL_TTF=2 --preload-file ${PDC_FONT_NAME}")
-    endif()
+    add_executable(hello examples/hello.c)
+    target_link_libraries(hello PRIVATE bf)
+    set_target_properties(hello PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/html")
+    foreach(EXE main hello)
+        set_target_properties(${EXE} PROPERTIES
+            COMPILE_FLAGS "-s USE_SDL=2"
+            LINK_FLAGS "-s USE_SDL=2 --emrun"
+            SUFFIX ".html")
+        if(EXISTS "${PDC_FONT_PATH}")
+            set_property(TARGET ${EXE} APPEND_STRING PROPERTY COMPILE_FLAGS " -s USE_SDL_TTF=2")
+            set_property(TARGET ${EXE} APPEND_STRING PROPERTY
+                LINK_FLAGS " -s USE_SDL_TTF=2 --preload-file ${PDC_FONT_NAME}")
+        endif()
+    endforeach()
 endif()

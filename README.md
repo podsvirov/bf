@@ -1,10 +1,14 @@
 # bf - buffered formatted input/output {#mainpage}
 
 This is a very small and lazy C library writen by Konstantin Podsvirov
-to create interactive examples in he [book].
+to create interactive examples for his [book].
 
 All the work with formatted input and output is performed by standard
-[scanf] and [prinntf] function, and behind the screen works [curses].
+[scanf] and [prinntf] functions, and behind the screen works [curses].
+
+## Source code
+
+Source available at [github].
 
 ## Code sample
 
@@ -23,16 +27,23 @@ int main() {
       running = 0;
     }
     bffs(); // fill screen
-  } while (running)
+  } while (running);
   bfbi(); // bye bf
   return 0;
 }
 ```
 
+## Living preview
+
+Launch the above code in your browser
+[just now](https://podsvirov.github.io/bf/hello.html)!
+
 ## Documentation
 
-Online documentation available [there](https://podsvirov.github.io/bf/).
+Online documentation available
+[there](https://podsvirov.github.io/bf/).
 
+[github]: https://github.com/podsvirov/bf
 [book]: http://book.podsvirov.pro
 [scanf]: https://en.cppreference.com/w/c/io/fscanf
 [prinntf]: https://en.cppreference.com/w/c/io/fprintf

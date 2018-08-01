@@ -2,3 +2,4 @@ build/
 *.exe
 *.swp
 *.user
+doxygen_sqlite3.db
