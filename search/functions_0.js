@@ -12,5 +12,6 @@ var searchData=
   ['bfia',['bfia',['../bf_8h.html#a496fceaa248f66c280c7c9a48dbc168d',1,'bf.c']]],
   ['bfo',['bfo',['../bf_8h.html#a50d0dc39639e456502d65d481b0e6572',1,'bf.c']]],
   ['bfoa',['bfoa',['../bf_8h.html#a02e9dadcf723aecb70bdb0ec93879d4a',1,'bf.c']]],
-  ['bfre',['bfre',['../bf_8h.html#a9da39a3f8a657b3b2febc5e85a58a09b',1,'bf.c']]]
+  ['bfre',['bfre',['../bf_8h.html#a9da39a3f8a657b3b2febc5e85a58a09b',1,'bf.c']]],
+  ['bfu8',['bfu8',['../bf_8h.html#ac064a37e5f5f119040e589f2b8074cae',1,'bf.c']]]
 ];

@@ -14,5 +14,6 @@ var searchData=
   ['bfo',['bfo',['../bf_8h.html#a50d0dc39639e456502d65d481b0e6572',1,'bf.c']]],
   ['bfoa',['bfoa',['../bf_8h.html#a02e9dadcf723aecb70bdb0ec93879d4a',1,'bf.c']]],
   ['bfre',['bfre',['../bf_8h.html#a9da39a3f8a657b3b2febc5e85a58a09b',1,'bf.c']]],
+  ['bfu8',['bfu8',['../bf_8h.html#ac064a37e5f5f119040e589f2b8074cae',1,'bf.c']]],
   ['bf_20_2d_20buffered_20formatted_20input_2foutput',['bf - buffered formatted input/output',['../index.html',1,'']]]
 ];
