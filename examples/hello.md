@@ -2,11 +2,11 @@
 
 \htmlonly
 
-<canvas id="canvas"></canvas>
+<canvas id="canvas" style="background-color: black; padding: 3px"></canvas>
 
 <br>
 
-<input type="button" value="Fullscreen" onclick="Module.requestFullscreen(false, false)">
+<input type="button" value="Fullscreen" onclick="Module.requestFullscreen(true, true)">
 
 <script type='text/javascript'>
     var Module = {
