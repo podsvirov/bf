@@ -30,7 +30,7 @@ void tui() {
   if (bfch() != bfer()) {
     ch = bfch();
   }
-  if (isgraph(ch)) {
+  if (ch < 0x80 && isgraph(ch)) {
     bfoa(3, "Latest code = %i char = %c\n", ch, ch);
   } else {
     bfoa(3, "Latest code = %i\n", ch);
